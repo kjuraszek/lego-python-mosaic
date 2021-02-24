@@ -1,14 +1,14 @@
 # lego+python=mosaic
- Program was developed to simplify creating mosaic from images using Lego-like bricks.
+ Program LePyMo was developed to simplify creating mosaic from images using Lego-like bricks.
 
 ## The idea
  I was thinking about a birthday gift for my fiancée, and I came with this concept - to create a mosaic using our pictures and Lego bricks.
 
 ## How does it work ?
  Firstly this program transforms selected image to a palette of certain colors. 
- After that it creates a PDF containing building instructions for this new image.
+ After that LePyMo creates a PDF containing building instructions for this new image.
 
-## How to run it ?
+## How to run LePyMo ?
  `Warning!` This program was tested with python 3.7 (I had some issues to build .exe using 3.8 and 3.9).
  
  It's a good idea to create and activate a virtual environment first using e.g. `virtualnenv`.
@@ -39,3 +39,13 @@ consists of total bricks amount of each color and building instructions divided 
 step is one row.
 
 Have fun!
+
+ ## Examples
+ ### Build instructions:
+ ![LePyMo - Building instructions main page](./img/lepymo-1.jpg "LePyMo - Building instructions main page")
+ ![LePyMo - Building instructions step 13](./img/lepymo-2.jpg "LePyMo - Building instructions step 13")
+ ### Final effect:
+![LePyMo - final effect](./img/lepymo-3.jpg "LePyMo - final effect")
+ ### Mosaic timelapse:
+(click to watch it on Youtube)
+[![Lego Mosaic Timelapse Video](./img/lepymo-4.jpg "Lego Mosaic Timelapse Video")](https://youtu.be/oBODOYErHhU)
