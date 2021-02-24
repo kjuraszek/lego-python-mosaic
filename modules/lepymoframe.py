@@ -203,7 +203,7 @@ class LePyMoFrame(wx.Frame):
         wx.MessageBox(
             message="This program was developed to simplify creating mosaic from images using Lego-like bricks. "
                     "Firstly this program transforms selected image to a palette of certain colors. After that it "
-                    "creates PDF containing building instructions for this new image. "
+                    "creates a PDF containing building instructions for this new image. "
                     "\n\nFirst you have to prepare your desired image - its dimensions (in pixels) must be equal to "
                     "the size (in bricks) of mosaic you are planning to create. E.g. when your plate is 50 by 50 "
                     "bricks, your image dimensions must be 50px by 50px.\n\nThe next step is to add colors to your "
