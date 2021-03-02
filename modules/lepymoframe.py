@@ -1,3 +1,4 @@
+import sys
 import wx
 import wx.lib.scrolledpanel as scrolled
 from modules.utilities import event_result
@@ -109,6 +110,15 @@ class LePyMoFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.on_info, info_item)
         self.Bind(wx.EVT_MENU, self.on_exit, exit_item)
         self.Bind(wx.EVT_CLOSE, self.on_exit)
+
+        try:
+            if sys.executable.lower().endswith("lepymo.exe"):
+                icon = wx.Icon(sys.executable, wx.BITMAP_TYPE_ICO)
+                self.SetIcon(icon)
+        except:
+            wx.MessageBox(message="Loading program icon failed",
+                          caption="Loading program icon failed",
+                          style=wx.OK | wx.ICON_ERROR)
 
     def on_add_color(self, event):
         """Helper function, adds color from color picker to the palette"""
