@@ -9,6 +9,12 @@
  After that LePyMo creates a PDF containing building instructions for this new image.
 
 ## How to run LePyMo ?
+ There are 3 ways to run this program:
+
+### Using LePyMo.exe created by myself
+ This is the easiest one - just download .exe from [here](https://kjuraszek.pl/lego-python-mosaic/).
+
+### Running script
  `Warning!` This program was tested with python 3.7 (I had some issues to build .exe using 3.8 and 3.9).
  
  It's a good idea to create and activate a virtual environment first using e.g. `virtualnenv`.
@@ -20,7 +26,12 @@
  #### `pip3 install -r requirements.txt`
 
  Run program:
- #### `python3 main.py`
+ #### `python3 lepymo.py`
+
+### Creating .exe on your own
+ This is a similar way to the previous one. Instead of running .py script - you build an executable file (.exe).
+ You can use pyinstaller:
+ #### `pyinstaller --onefile --windowed --icon=app.ico --version-file=version.txt lepymo.py`
 
 ## How to use it ?
 
