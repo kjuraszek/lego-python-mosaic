@@ -50,12 +50,11 @@ class LePyMoPDF(FPDF):
 
         self.big_header("Have fun!", y_pos)
 
-    def build_steps(self):
-        """Generates building instructions, step by step"""
-        out = []
+    def build_step(self, step):
+        """Generates a single step of the building instructions"""
         current_row = []
         img_data = list(self.image_src.getdata())
-
+        img_data = img_data[step * self.image_width:(step + 1) * self.image_width]
         for i, x in enumerate(img_data):
             if self._abort == 1:
                 return
@@ -76,43 +75,38 @@ class LePyMoPDF(FPDF):
                     }
                     current_row.append(d)
 
-            if i % self.image_width == self.image_width - 1:
-                out.append(current_row)
-                current_row = []
+        if self._abort == 1:
+            return
 
-        for i, x in enumerate(out):
+        self.add_page()
+        self.big_header("Step " + str(step + 1))
+        row_colors = Counter(list(self.image_src.getdata())[step * self.image_width:(step + 1) * self.image_width])
+        y_pos = 25
+        self.small_header("You'll need in this step:", y_pos)
+        y_pos += 5
+
+        for color, qty in row_colors.items():
             if self._abort == 1:
                 return
+            if 280 < y_pos + 8:
+                self.add_page()
+                y_pos = 10
+            self.small_brick(75, y_pos - 4, color)
+            self.brick_text(f"x {qty} {color}", 85, y_pos)
+            y_pos += 8
 
-            self.add_page()
-            self.big_header("Step " + str(i + 1))
-            row_colors = Counter(list(self.image_src.getdata())[i * self.image_width:(i + 1) * self.image_width])
-            y_pos = 25
-            self.small_header("You'll need in this step:", y_pos)
-            y_pos += 5
-
-            for color, qty in row_colors.items():
-                if self._abort == 1:
-                    return
-                if 280 < y_pos + 8:
-                    self.add_page()
-                    y_pos = 10
-                self.small_brick(75, y_pos - 4, color)
-                self.brick_text(f"x {qty} {color}", 85, y_pos)
-                y_pos += 8
-
-            y_pos += 10
-            self.small_header("Bricks from left to the right:", y_pos)
-            y_pos += 5
-            for r in x:
-                if self._abort == 1:
-                    return
-                if 280 < y_pos + 8:
-                    self.add_page()
-                    y_pos = 10
-                self.small_brick(75, y_pos - 4, r["color"])
-                self.brick_text(f"x {r['count']} {str(r['color'])}", 85, y_pos)
-                y_pos += 8
+        y_pos += 10
+        self.small_header("Bricks from left to the right:", y_pos)
+        y_pos += 5
+        for r in current_row:
+            if self._abort == 1:
+                return
+            if 280 < y_pos + 8:
+                self.add_page()
+                y_pos = 10
+            self.small_brick(75, y_pos - 4, r["color"])
+            self.brick_text(f"x {r['count']} {str(r['color'])}", 85, y_pos)
+            y_pos += 8
 
     def big_header(self, header_text, from_top=12):
         """Adds a big header to the current page"""

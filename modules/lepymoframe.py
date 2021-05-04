@@ -31,6 +31,7 @@ class LePyMoFrame(wx.Frame):
         self.paletteSizer = wx.BoxSizer(wx.VERTICAL)
         self.colorsSizer = wx.GridSizer(cols=2, hgap=2, vgap=2)
         self.generateSizer = wx.BoxSizer(wx.VERTICAL)
+        self.statusSizer = wx.BoxSizer(wx.VERTICAL)
 
         self.scrolled_panel.SetSizer(self.paletteSizer)
 
@@ -82,6 +83,9 @@ class LePyMoFrame(wx.Frame):
         self.generateSizer.AddSpacer(10)
         self.generateSizer.Add(generate_btn)
 
+        self.lepymo_status = wx.StaticText(self.panel, wx.ID_ANY, label='Status: Idle', name="lepymoStatus")
+        self.statusSizer.Add(self.lepymo_status)
+
         panel_sizer = wx.BoxSizer(wx.VERTICAL)
 
         panel_sizer.Add(self.fileSizer, 0, wx.ALIGN_LEFT)
@@ -90,7 +94,9 @@ class LePyMoFrame(wx.Frame):
         panel_sizer.Add(self.colorsSizer, 0, wx.ALIGN_LEFT)
         panel_sizer.AddSpacer(20)
         panel_sizer.Add(self.generateSizer, 0, wx.ALIGN_LEFT)
-        panel_sizer.AddSpacer(20)
+        panel_sizer.AddSpacer(30)
+        panel_sizer.Add(self.statusSizer, 0, wx.ALIGN_LEFT)
+        panel_sizer.AddSpacer(5)
 
         self.panel.SetSizer(panel_sizer)
 
@@ -177,6 +183,7 @@ class LePyMoFrame(wx.Frame):
             wx.MessageBox(message=error_message, caption="Generating image and pdf failed", style=wx.OK | wx.ICON_ERROR)
 
         else:
+            self.set_status("Starting")
             self.disable_inputs()
             self.worker = WorkerThread(self, self.selected_file, list(self.palette.values()), self.nopdf, self.event_id)
 
@@ -190,23 +197,32 @@ class LePyMoFrame(wx.Frame):
 
     def enable_inputs(self):
         """Helper function, enables inputs"""
+        self.set_status("Idle")
         inputs = self.input_ids + list(self.palette.keys())
         for input_id in inputs:
             input_widget = self.panel.FindWindowById(input_id)
             if input_widget and getattr(input_widget, "Enable", None):
                 input_widget.Enable()
 
+    def set_status(self, status):
+        self.lepymo_status.SetLabel(f'Status: {status}')
+
     def on_result(self, event):
         """Helper function, shows WorkerThread result"""
-        if event.data is None or event.data is False:
-            wx.MessageBox(message="Generating image and pdf failed",
-                          caption="Generating image and pdf failed",
-                          style=wx.OK | wx.ICON_ERROR)
-        else:
-            wx.MessageBox(message="Finished!", caption="Finished!", style=wx.OK)
+        if event.data is not None and event.data["event_type"] is not None:
+            if event.data["event_type"] == "result":
+                if event.data["status"] is None or event.data["status"] is False:
+                    wx.MessageBox(message="Generating image and pdf failed",
+                                  caption="Generating image and pdf failed",
+                                  style=wx.OK | wx.ICON_ERROR)
+                else:
+                    wx.MessageBox(message="Finished!", caption="Finished!", style=wx.OK)
 
-        self.worker = None
-        self.enable_inputs()
+                self.worker = None
+                self.enable_inputs()
+
+            elif event.data["event_type"] == "status_change":
+                self.set_status(event.data["status"])
 
     def on_info(self, event):
         """Helper function, shows messagebox"""

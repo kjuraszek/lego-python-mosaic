@@ -36,13 +36,25 @@ class WorkerThread(threading.Thread):
 
         if src_image and self._abort == 0:
             try:
+                event_data = {"event_type": "status_change", "status": "Calculating pixels"}
+                wx.PostEvent(self._notify_window, ResultEvent(self.event_id, event_data))
                 result = []
                 image_width, image_height = src_image.size
-                for pixel_color in list(src_image.getdata()):
+                for index, pixel_color in enumerate(list(src_image.getdata())):
+                    if image_width * image_height > 10000 and index % 10000 == 0:
+                        # update status change by 10000 pixels only for larger images
+                        event_data = {
+                            "event_type": "status_change",
+                            "status": f"Calculating pixel {index} / {image_width * image_height}"}
+                        wx.PostEvent(self._notify_window, ResultEvent(self.event_id, event_data))
+
                     if self._abort == 1:
                         return
 
                     result.append(self.closest_pixel(pixel_color, temp, self.palette))
+
+                event_data = {"event_type": "status_change", "status": "Generating image"}
+                wx.PostEvent(self._notify_window, ResultEvent(self.event_id, event_data))
 
                 src_image.putdata(result)
                 mosaic_name = run_date + "_mosaic.png"
@@ -54,21 +66,40 @@ class WorkerThread(threading.Thread):
                 output_image.save(mosaic_name_scaled)
 
                 if not self.nopdf and self._abort == 0:
+
                     self.pdf = LePyMoPDF(mosaic_name, mosaic_name_scaled, run_date)
                     self.pdf.main_page()
-                    self.pdf.build_steps()
+                    for i in range(image_height):
+                        event_data = {"event_type": "status_change", "status": f"Creating PDF page {i+1} / {image_height}"}
+                        wx.PostEvent(self._notify_window, ResultEvent(self.event_id, event_data))
+                        self.pdf.build_step(i)
+
+                    event_data = {"event_type": "status_change", "status": "Building PDF"}
+                    wx.PostEvent(self._notify_window, ResultEvent(self.event_id, event_data))
                     self.pdf.output(run_date + "_mosaic_instructions.pdf", "F")
                     self.pdf = False
 
                 if self._abort == 0:
-                    wx.PostEvent(self._notify_window, ResultEvent(self.event_id, True))
+                    event_data = {"event_type": "status_change", "status": "Idle"}
+                    wx.PostEvent(self._notify_window, ResultEvent(self.event_id, event_data))
+
+                    event_data = {"event_type": "result", "status": True}
+                    wx.PostEvent(self._notify_window, ResultEvent(self.event_id, event_data))
 
             except:
-                wx.PostEvent(self._notify_window, ResultEvent(self.event_id, False))
+                event_data = {"event_type": "status_change", "status": "Idle"}
+                wx.PostEvent(self._notify_window, ResultEvent(self.event_id, event_data))
+
+                event_data = {"event_type": "result", "status": False}
+                wx.PostEvent(self._notify_window, ResultEvent(self.event_id, event_data))
                 return
 
         elif self._abort == 0:
-            wx.PostEvent(self._notify_window, ResultEvent(self.event_id, False))
+            event_data = {"event_type": "status_change", "status": "Idle"}
+            wx.PostEvent(self._notify_window, ResultEvent(self.event_id, event_data))
+
+            event_data = {"event_type": "result", "status": False}
+            wx.PostEvent(self._notify_window, ResultEvent(self.event_id, event_data))
 
     def closest_pixel(self, pixel, temp, colors):
         """Helper function, finds closest pixel color based on palette"""
