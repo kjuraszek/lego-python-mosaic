@@ -1,11 +1,12 @@
 import wx
+import os
 import pathlib
 import datetime
 import threading
 from PIL import Image
 from colour.difference import delta_E_CIE2000
 from modules.lepymopdf import LePyMoPDF
-from modules.utilities import ResultEvent
+from modules.utilities import ResultEvent, _FILES_SUFFIXES
 
 
 class WorkerThread(threading.Thread):
@@ -21,12 +22,13 @@ class WorkerThread(threading.Thread):
         self.pdf = False
         self.nopdf = nopdf
         self.event_id = event_id
+        self.run_date = False
         self.start()
 
     def run_thread(self):
         """Run Thread - generate image and pdf"""
 
-        run_date = datetime.datetime.now().strftime("%d%m%Y_%H%M%S")
+        self.run_date = datetime.datetime.now().strftime("%d%m%Y_%H%M%S")
         temp = {}
 
         try:
@@ -57,8 +59,8 @@ class WorkerThread(threading.Thread):
                 wx.PostEvent(self._notify_window, ResultEvent(self.event_id, event_data))
 
                 src_image.putdata(result)
-                mosaic_name = run_date + "_mosaic.png"
-                mosaic_name_scaled = run_date + "_mosaic_scaled.png"
+                mosaic_name = self.run_date + "_mosaic.png"
+                mosaic_name_scaled = self.run_date + "_mosaic_scaled.png"
                 src_image.save(mosaic_name)
                 scaled_height = 400
                 scale = scaled_height / image_height
@@ -67,16 +69,18 @@ class WorkerThread(threading.Thread):
 
                 if not self.nopdf and self._abort == 0:
 
-                    self.pdf = LePyMoPDF(mosaic_name, mosaic_name_scaled, run_date)
+                    self.pdf = LePyMoPDF(mosaic_name, mosaic_name_scaled, self.run_date)
                     self.pdf.main_page()
                     for i in range(image_height):
                         event_data = {"event_type": "status_change", "status": f"Creating PDF page {i+1} / {image_height}"}
                         wx.PostEvent(self._notify_window, ResultEvent(self.event_id, event_data))
                         self.pdf.build_step(i)
+                        if self._abort == 1:
+                            return
 
                     event_data = {"event_type": "status_change", "status": "Building PDF"}
                     wx.PostEvent(self._notify_window, ResultEvent(self.event_id, event_data))
-                    self.pdf.output(run_date + "_mosaic_instructions.pdf", "F")
+                    self.pdf.output(self.run_date + "_mosaic_instructions.pdf", "F")
                     self.pdf = False
 
                 if self._abort == 0:
@@ -110,7 +114,21 @@ class WorkerThread(threading.Thread):
         return temp[pixel]
 
     def abort(self):
-        self._abort = 1
+
         if self.pdf and isinstance(self.pdf, LePyMoPDF):
             self.pdf.abort()
+
+        self._abort = 1
+        if self.run_date:
+            filenames = [self.run_date + suffix for suffix in _FILES_SUFFIXES]
+            for filename in filenames:
+                if filename in os.listdir('.'):
+                    try:
+                        os.remove(filename)
+                    except:
+                        error_message = f"LePyMo Was unable to remove {filename}, try to remove it manually."
+                        wx.MessageBox(message=error_message, caption="Removing file failed", style=wx.OK | wx.ICON_ERROR)
+
+        event_data = {"event_type": "status_change", "status": "Idle"}
+        wx.PostEvent(self._notify_window, ResultEvent(self.event_id, event_data))
 

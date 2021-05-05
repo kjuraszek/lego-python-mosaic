@@ -31,6 +31,7 @@ class LePyMoFrame(wx.Frame):
         self.paletteSizer = wx.BoxSizer(wx.VERTICAL)
         self.colorsSizer = wx.GridSizer(cols=2, hgap=2, vgap=2)
         self.generateSizer = wx.BoxSizer(wx.VERTICAL)
+        self.abortSizer = wx.BoxSizer(wx.VERTICAL)
         self.statusSizer = wx.BoxSizer(wx.VERTICAL)
 
         self.scrolled_panel.SetSizer(self.paletteSizer)
@@ -83,6 +84,10 @@ class LePyMoFrame(wx.Frame):
         self.generateSizer.AddSpacer(10)
         self.generateSizer.Add(generate_btn)
 
+        abort_btn = wx.Button(self.panel, wx.ID_ANY, label="Abort")
+        abort_btn.Bind(wx.EVT_BUTTON, self.on_abort)
+        self.abortSizer.Add(abort_btn)
+
         self.lepymo_status = wx.StaticText(self.panel, wx.ID_ANY, label='Status: Idle', name="lepymoStatus")
         self.statusSizer.Add(self.lepymo_status)
 
@@ -94,6 +99,8 @@ class LePyMoFrame(wx.Frame):
         panel_sizer.Add(self.colorsSizer, 0, wx.ALIGN_LEFT)
         panel_sizer.AddSpacer(20)
         panel_sizer.Add(self.generateSizer, 0, wx.ALIGN_LEFT)
+        panel_sizer.AddSpacer(10)
+        panel_sizer.Add(self.abortSizer, 0, wx.ALIGN_LEFT)
         panel_sizer.AddSpacer(30)
         panel_sizer.Add(self.statusSizer, 0, wx.ALIGN_LEFT)
         panel_sizer.AddSpacer(5)
@@ -243,6 +250,22 @@ class LePyMoFrame(wx.Frame):
                     "step is one row.\n\nHave fun!",
             caption="Info",
             style=wx.OK | wx.ICON_INFORMATION)
+
+    def on_abort(self, event):
+        if self.worker:
+            dialog = wx.MessageDialog(self, message="Are you sure you want to abort current action?", caption="Abort?",
+                                      style=wx.YES_NO, pos=wx.DefaultPosition)
+            response = dialog.ShowModal()
+            if response == wx.ID_YES and self.worker:
+                self.worker.abort()
+
+                self.worker = None
+                wx.MessageBox(message="Action aborted.", caption="Action aborted", style=wx.OK)
+                self.enable_inputs()
+            else:
+                event.StopPropagation()
+        else:
+            wx.MessageBox(message="There's nothing to abort !", caption="Unable to abort", style=wx.OK)
 
     def on_exit(self, event):
         dialog = wx.MessageDialog(self, message="Are you sure you want to quit?", caption="Quit?",
