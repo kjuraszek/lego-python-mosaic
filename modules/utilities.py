@@ -1,6 +1,8 @@
 import wx
 
 
+_FILES_SUFFIXES = ["_mosaic.png", "_mosaic_scaled.png", "_mosaic_instructions.pdf"]
+
 def event_result(window, function, event_id):
     """Define Result Event."""
     window.Connect(-1, -1, event_id, function)
