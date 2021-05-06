@@ -114,7 +114,7 @@ class WorkerThread(threading.Thread):
         return temp[pixel]
 
     def abort(self):
-
+        """Helper function, stops current WorkerThread"""
         if self.pdf and isinstance(self.pdf, LePyMoPDF):
             self.pdf.abort()
 

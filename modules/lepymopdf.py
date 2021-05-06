@@ -136,4 +136,5 @@ class LePyMoPDF(FPDF):
         self.ellipse(x + 1.0, y + 1.0, 3, 3)
 
     def abort(self):
+        """Stops creating PDF"""
         self._abort = 1

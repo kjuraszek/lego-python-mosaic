@@ -212,6 +212,7 @@ class LePyMoFrame(wx.Frame):
                 input_widget.Enable()
 
     def set_status(self, status):
+        """Helper function, sets text on status label"""
         self.lepymo_status.SetLabel(f'Status: {status}')
 
     def on_result(self, event):
@@ -252,6 +253,7 @@ class LePyMoFrame(wx.Frame):
             style=wx.OK | wx.ICON_INFORMATION)
 
     def on_abort(self, event):
+        """Helper function, aborts current action"""
         if self.worker:
             dialog = wx.MessageDialog(self, message="Are you sure you want to abort current action?", caption="Abort?",
                                       style=wx.YES_NO, pos=wx.DefaultPosition)
@@ -268,6 +270,7 @@ class LePyMoFrame(wx.Frame):
             wx.MessageBox(message="There's nothing to abort !", caption="Unable to abort", style=wx.OK)
 
     def on_exit(self, event):
+        """Helper function, shows messagebox on exit attempt"""
         dialog = wx.MessageDialog(self, message="Are you sure you want to quit?", caption="Quit?",
                                   style=wx.YES_NO, pos=wx.DefaultPosition)
         response = dialog.ShowModal()
@@ -278,7 +281,7 @@ class LePyMoFrame(wx.Frame):
             event.StopPropagation()
 
     def exit_program(self, event):
-
+        """Helper function, aborts worker and exits program"""
         if self.worker:
             self.worker.abort()
             self.worker = None
