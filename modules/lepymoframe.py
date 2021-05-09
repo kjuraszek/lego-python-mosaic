@@ -31,7 +31,7 @@ class LePyMoFrame(wx.Frame):
         self.paletteSizer = wx.BoxSizer(wx.VERTICAL)
         self.colorsSizer = wx.GridSizer(cols=2, hgap=2, vgap=2)
         self.generateSizer = wx.BoxSizer(wx.VERTICAL)
-        self.abortSizer = wx.BoxSizer(wx.VERTICAL)
+        self.buttonsSizer = wx.BoxSizer(wx.HORIZONTAL)
         self.statusSizer = wx.BoxSizer(wx.VERTICAL)
 
         self.scrolled_panel.SetSizer(self.paletteSizer)
@@ -67,10 +67,10 @@ class LePyMoFrame(wx.Frame):
         self.colorsSizer.Add(self.color_picker)
         self.colorsSizer.Add(add_btn)
 
-        nopdf_checkbox = wx.CheckBox(self.panel, wx.ID_ANY, label="Don't generate PDF")
-        nopdf_checkbox.SetValue(True)
-        nopdf_checkbox.Bind(wx.EVT_CHECKBOX, self.on_checkbox_change)
-        self.input_ids.append(nopdf_checkbox.GetId())
+        self.nopdf_checkbox = wx.CheckBox(self.panel, wx.ID_ANY, label="Don't generate PDF")
+        self.nopdf_checkbox.SetValue(True)
+        self.nopdf_checkbox.Bind(wx.EVT_CHECKBOX, self.on_checkbox_change)
+        self.input_ids.append(self.nopdf_checkbox.GetId())
 
         nopdf_checkbox_info = wx.StaticText(self.panel, wx.ID_ANY, label="(Use this option to test\n "
                                                                          "your color palette.)", name="colorPalette")
@@ -79,14 +79,18 @@ class LePyMoFrame(wx.Frame):
         generate_btn.Bind(wx.EVT_BUTTON, self.on_generate)
         self.input_ids.append(generate_btn.GetId())
 
-        self.generateSizer.Add(nopdf_checkbox)
+        self.generateSizer.Add(self.nopdf_checkbox)
         self.generateSizer.Add(nopdf_checkbox_info)
         self.generateSizer.AddSpacer(10)
         self.generateSizer.Add(generate_btn)
 
         abort_btn = wx.Button(self.panel, wx.ID_ANY, label="Abort")
         abort_btn.Bind(wx.EVT_BUTTON, self.on_abort)
-        self.abortSizer.Add(abort_btn)
+        clear_btn = wx.Button(self.panel, wx.ID_ANY, label="Clear")
+        clear_btn.Bind(wx.EVT_BUTTON, self.on_clear)
+        self.input_ids.append(clear_btn.GetId())
+        self.buttonsSizer.Add(abort_btn)
+        self.buttonsSizer.Add(clear_btn)
 
         self.lepymo_status = wx.StaticText(self.panel, wx.ID_ANY, label='Status: Idle', name="lepymoStatus")
         self.statusSizer.Add(self.lepymo_status)
@@ -100,7 +104,7 @@ class LePyMoFrame(wx.Frame):
         panel_sizer.AddSpacer(20)
         panel_sizer.Add(self.generateSizer, 0, wx.ALIGN_LEFT)
         panel_sizer.AddSpacer(10)
-        panel_sizer.Add(self.abortSizer, 0, wx.ALIGN_LEFT)
+        panel_sizer.Add(self.buttonsSizer, 0, wx.ALIGN_LEFT)
         panel_sizer.AddSpacer(30)
         panel_sizer.Add(self.statusSizer, 0, wx.ALIGN_LEFT)
         panel_sizer.AddSpacer(5)
@@ -251,6 +255,23 @@ class LePyMoFrame(wx.Frame):
                     "step is one row.\n\nHave fun!",
             caption="Info",
             style=wx.OK | wx.ICON_INFORMATION)
+
+    def on_clear(self, event):
+        """Helper function, clears all input fields"""
+        if self.worker is None:
+            palette_sizer_children = list(self.paletteSizer.GetChildren())
+            while len(palette_sizer_children) > 1:
+                self.paletteSizer.Hide(len(palette_sizer_children) - 1)
+                self.paletteSizer.Remove(len(palette_sizer_children) - 1)
+                palette_sizer_children = list(self.paletteSizer.GetChildren())
+
+            self.palette = {}
+            self.selected_file = ""
+            self.file_picker.SetPath("")
+            self.select_file_status.SetLabel("Not selected")
+            self.nopdf = True
+            self.nopdf_checkbox.SetValue(True)
+            self.paletteSizer.Layout()
 
     def on_abort(self, event):
         """Helper function, aborts current action"""
