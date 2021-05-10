@@ -54,8 +54,10 @@ Have fun!
  ## Examples
  ### Build instructions:
  ![LePyMo - Building instructions main page](./img/lepymo-1.jpg "LePyMo - Building instructions main page")
- ![LePyMo - Building instructions step 13](./img/lepymo-2.jpg "LePyMo - Building instructions step 13")
+ ![LePyMo - Building instructions step 11](./img/lepymo-2.jpg "LePyMo - Building instructions step 11")
+ ![LePyMo - Building instructions Sandro](./img/lepymo-5.jpg "LePyMo - Building instructions Sandro")
  ### Final effect:
+![LePyMo - final effect](./img/lepymo-6.jpg "LePyMo - final effect")
 ![LePyMo - final effect](./img/lepymo-3.jpg "LePyMo - final effect")
  ### Mosaic timelapse:
 (click to watch it on Youtube)
