@@ -252,7 +252,9 @@ class LePyMoFrame(wx.Frame):
                     "with output image you can turn off Don't generate PDF option. This process also can take up to a"
                     "few minutes - it depends on amount of colors in your palette and dimensions of image. The PDF "
                     "consists of total bricks amount of each color and building instructions divided in steps - each "
-                    "step is one row.\n\nHave fun!",
+                    "step is one row.\n\nYou can stop current action using Abort button - all files created in "
+                    "current run will be removed. You can clear inputs (source image, color palette, No PDF checkbox) "
+                    "using Clear button.\n\nHave fun!",
             caption="Info",
             style=wx.OK | wx.ICON_INFORMATION)
 

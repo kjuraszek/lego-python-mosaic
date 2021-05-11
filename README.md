@@ -49,6 +49,8 @@ few minutes - it depends on amount of colors in your palette and dimensions of i
 consists of total bricks amount of each color and building instructions divided in steps - each 
 step is one row.
 
+You can stop current action using Abort button - all files created in current run will be removed. You can clear inputs (source image, color palette, No PDF checkbox) using Clear button.
+
 Have fun!
 
  ## Examples
