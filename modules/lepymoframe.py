@@ -3,6 +3,7 @@ import wx
 import wx.lib.scrolledpanel as scrolled
 from modules.utilities import event_result
 from modules.workerthread import WorkerThread
+import csv
 
 
 class LePyMoFrame(wx.Frame):
@@ -10,7 +11,7 @@ class LePyMoFrame(wx.Frame):
 
     def __init__(self):
         """Init LePyMo Class."""
-        wx.Frame.__init__(self, None, wx.ID_ANY, "LePyMo", size=(240, 440))
+        wx.Frame.__init__(self, None, wx.ID_ANY, "LePyMo", size=(240, 500))
 
         self.panel = wx.Panel(self, wx.ID_ANY)
         self.selected_file = ""
@@ -30,6 +31,7 @@ class LePyMoFrame(wx.Frame):
         self.fileSizer = wx.BoxSizer(wx.VERTICAL)
         self.paletteSizer = wx.BoxSizer(wx.VERTICAL)
         self.colorsSizer = wx.GridSizer(cols=2, hgap=2, vgap=2)
+        self.csvSizer = wx.BoxSizer(wx.VERTICAL)
         self.generateSizer = wx.BoxSizer(wx.VERTICAL)
         self.buttonsSizer = wx.BoxSizer(wx.HORIZONTAL)
         self.statusSizer = wx.BoxSizer(wx.VERTICAL)
@@ -67,6 +69,15 @@ class LePyMoFrame(wx.Frame):
         self.colorsSizer.Add(self.color_picker)
         self.colorsSizer.Add(add_btn)
 
+        self.select_csv_file_label = wx.StaticText(self.panel, wx.ID_ANY, label="Add colors from .CSV file:",
+                                               name="selectCSVFileLabel")
+        self.csv_file_picker = wx.FilePickerCtrl(self.panel, id=wx.ID_ANY, path="", message="Add colors from .CSV file",
+                                             style=wx.FLP_OPEN|wx.FLP_FILE_MUST_EXIST)
+        self.csv_file_picker.Bind(wx.EVT_FILEPICKER_CHANGED, self.on_colors_load)
+        self.input_ids.append(self.csv_file_picker.GetId())
+        self.csvSizer.Add(self.select_csv_file_label)
+        self.csvSizer.Add(self.csv_file_picker)
+
         self.nopdf_checkbox = wx.CheckBox(self.panel, wx.ID_ANY, label="Don't generate PDF")
         self.nopdf_checkbox.SetValue(True)
         self.nopdf_checkbox.Bind(wx.EVT_CHECKBOX, self.on_checkbox_change)
@@ -101,6 +112,8 @@ class LePyMoFrame(wx.Frame):
         panel_sizer.Add(self.scrolled_panel, 1, wx.EXPAND)
         panel_sizer.AddSpacer(10)
         panel_sizer.Add(self.colorsSizer, 0, wx.ALIGN_LEFT)
+        panel_sizer.AddSpacer(10)
+        panel_sizer.Add(self.csvSizer, 0, wx.ALIGN_LEFT)
         panel_sizer.AddSpacer(20)
         panel_sizer.Add(self.generateSizer, 0, wx.ALIGN_LEFT)
         panel_sizer.AddSpacer(10)
@@ -171,6 +184,44 @@ class LePyMoFrame(wx.Frame):
     def on_checkbox_change(self, event):
         """Helper function, changes checkbox value"""
         self.nopdf = not self.nopdf
+
+    def on_colors_load(self, event):
+        """Helper function, loads colors from CSV file"""
+        # file opener
+        # load csv file
+        csv_file_path = self.csv_file_picker.GetPath()
+        colors = []
+        with open(csv_file_path, newline='') as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=';', quotechar='|')
+            rows = list(csv_reader)
+            for row in rows:
+                if len(row) == 3:
+                    color_tuple = tuple([int(z) for z in row])
+                    if color_tuple not in self.palette.values():
+                        colors.append(color_tuple)
+
+            colors = list(set(colors))
+
+        for color in colors:
+            color_rect = wx.StaticText(self.scrolled_panel, label=20 * " ")
+            color_rect.SetBackgroundColour(color)
+
+            btn = wx.Button(self.scrolled_panel, wx.ID_ANY, label="Remove")
+            btn.Bind(wx.EVT_BUTTON, self.remove_color, id=btn.GetId())
+
+            color_label = wx.StaticText(self.scrolled_panel, label=f'rgb{color}',
+                                        name="colorLabel")
+            single_color = wx.GridSizer(cols=2, hgap=2, vgap=2)
+            single_color.AddMany([color_rect, btn, color_label])
+
+            self.palette[btn.GetId()] = color
+            self.paletteSizer.Add(single_color)
+
+        self.scrolled_panel.Layout()
+        self.scrolled_panel.SetupScrolling()
+        wx.MessageBox(message=f"{len(colors)} color{'s' if len(colors) != 1 else ''} have been added to the palette ",
+                      caption="Added colors", style=wx.OK)
+
 
     def remove_color(self, event):
         """Helper function, removes color from the palette"""
