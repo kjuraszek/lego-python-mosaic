@@ -152,22 +152,10 @@ class LePyMoFrame(wx.Frame):
 
     def on_add_color(self, event):
         """Helper function, adds color from color picker to the palette"""
-        color = self.color_picker.GetColour()
-        if tuple(color[:3]) not in self.palette.values():
-            color_rect = wx.StaticText(self.scrolled_panel, label=20 * " ")
-            color_rect.SetBackgroundColour(color)
-
-            btn = wx.Button(self.scrolled_panel, wx.ID_ANY, label="Remove")
-            btn.Bind(wx.EVT_BUTTON, self.remove_color, id=btn.GetId())
-
-            color_label = wx.StaticText(self.scrolled_panel, label=color.GetAsString(wx.C2S_CSS_SYNTAX),
-                                        name="colorLabel")
-            single_color = wx.GridSizer(cols=2, hgap=2, vgap=2)
-            single_color.AddMany([color_rect, btn, color_label])
-
-            self.palette[btn.GetId()] = (tuple(color[:3]))
-
-            self.paletteSizer.Add(single_color)
+        color_from_picker = self.color_picker.GetColour()
+        color = tuple(color_from_picker[:3])
+        if color not in self.palette.values():
+            self.add_color_to_palette(color)
             self.scrolled_panel.Layout()
             self.scrolled_panel.SetupScrolling()
         else:
@@ -203,6 +191,16 @@ class LePyMoFrame(wx.Frame):
             colors = list(set(colors))
 
         for color in colors:
+            self.add_color_to_palette(color)
+
+        self.scrolled_panel.Layout()
+        self.scrolled_panel.SetupScrolling()
+        wx.MessageBox(message=f"{len(colors)} color{'s' if len(colors) != 1 else ''} have been added to the palette ",
+                      caption="Added colors", style=wx.OK)
+
+    def add_color_to_palette(self, color):
+        """Helper function, adds color to the palette"""
+        if type(color) is tuple and len(color) == 3:
             color_rect = wx.StaticText(self.scrolled_panel, label=20 * " ")
             color_rect.SetBackgroundColour(color)
 
@@ -216,11 +214,6 @@ class LePyMoFrame(wx.Frame):
 
             self.palette[btn.GetId()] = color
             self.paletteSizer.Add(single_color)
-
-        self.scrolled_panel.Layout()
-        self.scrolled_panel.SetupScrolling()
-        wx.MessageBox(message=f"{len(colors)} color{'s' if len(colors) != 1 else ''} have been added to the palette ",
-                      caption="Added colors", style=wx.OK)
 
 
     def remove_color(self, event):
