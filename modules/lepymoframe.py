@@ -175,8 +175,6 @@ class LePyMoFrame(wx.Frame):
 
     def on_colors_load(self, event):
         """Helper function, loads colors from CSV file"""
-        # file opener
-        # load csv file
         csv_file_path = self.csv_file_picker.GetPath()
         colors = []
         with open(csv_file_path, newline='') as csv_file:
@@ -200,7 +198,7 @@ class LePyMoFrame(wx.Frame):
 
     def add_color_to_palette(self, color):
         """Helper function, adds color to the palette"""
-        if type(color) is tuple and len(color) == 3:
+        if self.validate_color(color):
             color_rect = wx.StaticText(self.scrolled_panel, label=20 * " ")
             color_rect.SetBackgroundColour(color)
 
@@ -215,6 +213,14 @@ class LePyMoFrame(wx.Frame):
             self.palette[btn.GetId()] = color
             self.paletteSizer.Add(single_color)
 
+    def validate_color(self, color):
+        """Helper function, returns True if color is a tuple of 3 integers in range <0, 256) (R, G, B)"""
+        if type(color) is tuple and \
+                len(color) == 3 and \
+                all([(type(cc) == int and 0 <= cc < 256) for cc in color]):
+            return True
+        else:
+            return False
 
     def remove_color(self, event):
         """Helper function, removes color from the palette"""
