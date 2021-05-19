@@ -177,23 +177,30 @@ class LePyMoFrame(wx.Frame):
         """Helper function, loads colors from CSV file"""
         csv_file_path = self.csv_file_picker.GetPath()
         colors = []
-        with open(csv_file_path, newline='') as csv_file:
-            csv_reader = csv.reader(csv_file, delimiter=';', quotechar='|')
-            rows = list(csv_reader)
-            for row in rows:
-                if len(row) == 3:
-                    color_tuple = tuple([int(z) for z in row])
-                    if color_tuple not in self.palette.values():
-                        colors.append(color_tuple)
+        try:
+            with open(csv_file_path, newline='') as csv_file:
+                csv_reader = csv.reader(csv_file, delimiter=';', quotechar='|')
+                rows = list(csv_reader)
 
-            colors = list(set(colors))
+        except:
+            wx.MessageBox(message="Loading colors failed", caption="Unable to open CSV file", style=wx.OK | wx.ICON_ERROR)
 
+        for row in rows:
+            if len(row) == 3:
+                color_tuple = tuple([int(z) for z in row if z.isdigit()])
+                if len(color_tuple) == 3 and color_tuple not in self.palette.values():
+                    colors.append(color_tuple)
+
+        colors = list(set(colors))
+        added_colors = 0
         for color in colors:
-            self.add_color_to_palette(color)
+            if self.add_color_to_palette(color):
+                added_colors += 1
 
         self.scrolled_panel.Layout()
         self.scrolled_panel.SetupScrolling()
-        wx.MessageBox(message=f"{len(colors)} color{'s' if len(colors) != 1 else ''} have been added to the palette ",
+        wx.MessageBox(message=f"{added_colors} color{'s' if added_colors != 1 else ''} "
+                              f"have been added to the palette ",
                       caption="Added colors", style=wx.OK)
 
     def add_color_to_palette(self, color):
@@ -212,6 +219,9 @@ class LePyMoFrame(wx.Frame):
 
             self.palette[btn.GetId()] = color
             self.paletteSizer.Add(single_color)
+            return True
+        else:
+            return False
 
     def validate_color(self, color):
         """Helper function, returns True if color is a tuple of 3 integers in range <0, 256) (R, G, B)"""
