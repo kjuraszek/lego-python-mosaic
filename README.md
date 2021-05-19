@@ -44,6 +44,8 @@ than 300 colors. At this stage it is better to keep Don't generate PDF option tu
 selected color palette. The process of creating desired image can take even up to a few minutes - 
 it depends on amount of colors in your palette and dimensions of image. 
 
+You also can add colors to the palette using .csv file - look at `example-colors.csv` file. Each row represents one color, and each column - red (R), green (G) or blue (B) part of color (in that order). Each column must be separated with semicolon `;` and each row with a newline.
+
 When you are satisfied with output image you can turn off Don't generate PDF option. This process also can take up to a
 few minutes - it depends on amount of colors in your palette and dimensions of image. The PDF 
 consists of total bricks amount of each color and building instructions divided in steps - each 
