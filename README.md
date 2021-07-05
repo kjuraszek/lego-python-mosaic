@@ -1,6 +1,7 @@
 # lego+python=mosaic
  Program LePyMo was developed to simplify creating mosaic from images using Lego-like bricks.
 
+ ![LePyMo - main window](./img/lepymo-main-window.jpg "LePyMo - main window")
 ## The idea
  I was thinking about a birthday gift for my fiancée, and I came with this concept - to create a mosaic using our pictures and Lego bricks.
 
