@@ -20,6 +20,7 @@ class LePyMoFrame(wx.Frame):
         self.event_id = wx.ID_ANY
         self.input_ids = []
         self.worker = None
+        self.version = (0, 0, 0, 4)
 
         event_result(self, self.on_result, self.event_id)
 
@@ -317,7 +318,7 @@ class LePyMoFrame(wx.Frame):
                     "consists of total bricks amount of each color and building instructions divided in steps - each "
                     "step is one row.\n\nYou can stop current action using Abort button - all files created in "
                     "current run will be removed. You can clear inputs (source image, color palette, No PDF checkbox) "
-                    "using Clear button.\n\nHave fun!",
+                    "using Clear button.\n\nHave fun!\n\nLePyMo version: " + ".".join([str(num) for num in self.version]),
             caption="Info",
             style=wx.OK | wx.ICON_INFORMATION)
 
