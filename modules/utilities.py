@@ -1,3 +1,9 @@
+"""
+utilities module
+
+This module contains common constants, functions and classes.
+"""
+
 import wx
 
 
@@ -8,7 +14,7 @@ def event_result(window, function, event_id):
     window.Connect(-1, -1, event_id, function)
 
 
-class ResultEvent(wx.PyEvent):
+class ResultEvent(wx.PyEvent):  # pylint: disable=R0903
     """Simple event to send thread results"""
 
     def __init__(self, event_id, data):
