@@ -1,3 +1,8 @@
+"""
+LePyMo Main module
+
+This module runs the main loop.
+"""
 import wx
 from modules.lepymoframe import LePyMoFrame
 
