@@ -1,8 +1,15 @@
-import wx
+"""
+LePyMo Workerthread module
+
+This module contains WorkerThread class.
+Thread is responsible of generating image and pdf.
+"""
+
 import os
 import pathlib
 import datetime
 import threading
+import wx
 from PIL import Image
 from colour.difference import delta_E_CIE2000
 from modules.lepymopdf import LePyMoPDF
@@ -11,7 +18,7 @@ from modules.utilities import ResultEvent, _FILES_SUFFIXES
 
 class WorkerThread(threading.Thread):
     """Worker Thread Class."""
-    def __init__(self, notify_window, image_path, palette, nopdf, event_id):
+    def __init__(self, notify_window, image_path, palette, nopdf, event_id):  # pylint: disable=R0913
         """Init Worker Thread Class."""
         threading.Thread.__init__(self)
         self._notify_window = notify_window
@@ -109,8 +116,7 @@ class WorkerThread(threading.Thread):
         """Helper function, finds closest pixel color based on palette"""
         if pixel in temp:
             return temp[pixel]
-        n = min(colors, key=lambda func: delta_E_CIE2000(pixel, func))
-        temp[pixel] = n
+        temp[pixel] = min(colors, key=lambda func: delta_E_CIE2000(pixel, func))
         return temp[pixel]
 
     def abort(self):
@@ -131,4 +137,3 @@ class WorkerThread(threading.Thread):
 
         event_data = {"event_type": "status_change", "status": "Idle"}
         wx.PostEvent(self._notify_window, ResultEvent(self.event_id, event_data))
-
