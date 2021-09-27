@@ -15,6 +15,7 @@ from modules.workerthread import WorkerThread
 class LePyMoFrame(wx.Frame):
     """LePyMo main frame class"""
 
+    # pylint: disable=R0902,R0915
     def __init__(self):
         """Init LePyMo Class."""
         wx.Frame.__init__(self, None, wx.ID_ANY, "LePyMo", size=(240, 500))

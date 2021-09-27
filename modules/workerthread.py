@@ -34,6 +34,7 @@ class WorkerThread(threading.Thread):
     def run_thread(self):
         """Run Thread - generate image and pdf"""
 
+        # pylint: disable=R0915
         self.run_date = datetime.datetime.now().strftime("%d%m%Y_%H%M%S")
         temp = {}
 
