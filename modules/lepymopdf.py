@@ -1,6 +1,13 @@
+"""
+LePyMoPDF module
+
+This module contains LePyMoPDF class.
+LePyMoPDF class is used to generate pdf.
+"""
+
+from collections import Counter
 from PIL import Image
 from fpdf import FPDF
-from collections import Counter
 
 
 class LePyMoPDF(FPDF):
@@ -36,7 +43,7 @@ class LePyMoPDF(FPDF):
         for color, qty in self.colors.items():
             if self._abort == 1:
                 return
-            if 280 < y_pos + 8:
+            if y_pos + 8 > 280:
                 self.add_page()
                 y_pos = 10
             self.small_brick(75, y_pos - 4, color)
@@ -44,7 +51,7 @@ class LePyMoPDF(FPDF):
             y_pos += 8
 
         y_pos += 10
-        if 280 < y_pos + 30:
+        if y_pos + 30 > 280:
             self.add_page()
             y_pos = 20
 
@@ -55,25 +62,25 @@ class LePyMoPDF(FPDF):
         current_row = []
         img_data = list(self.image_src.getdata())
         img_data = img_data[step * self.image_width:(step + 1) * self.image_width]
-        for i, x in enumerate(img_data):
+        for index, value in enumerate(img_data):
             if self._abort == 1:
                 return
-            if i % self.image_width == 0:
-                d = {
-                    "color": x,
+            if index % self.image_width == 0:
+                current_data = {
+                    "color": value,
                     "count": 1
                 }
-                current_row.append(d)
+                current_row.append(current_data)
             else:
-                p = img_data[i - 1]
-                if x == p:
+                current_value = img_data[index - 1]
+                if value == current_value:
                     current_row[-1]["count"] += 1
                 else:
-                    d = {
-                        "color": x,
+                    current_data = {
+                        "color": value,
                         "count": 1
                     }
-                    current_row.append(d)
+                    current_row.append(current_data)
 
         if self._abort == 1:
             return
@@ -88,7 +95,7 @@ class LePyMoPDF(FPDF):
         for color, qty in row_colors.items():
             if self._abort == 1:
                 return
-            if 280 < y_pos + 8:
+            if y_pos + 8 > 280:
                 self.add_page()
                 y_pos = 10
             self.small_brick(75, y_pos - 4, color)
@@ -98,14 +105,14 @@ class LePyMoPDF(FPDF):
         y_pos += 10
         self.small_header("Bricks from left to the right:", y_pos)
         y_pos += 5
-        for r in current_row:
+        for current_row_element in current_row:
             if self._abort == 1:
                 return
-            if 280 < y_pos + 8:
+            if y_pos + 8 > 280:
                 self.add_page()
                 y_pos = 10
-            self.small_brick(75, y_pos - 4, r["color"])
-            self.brick_text(f"x {r['count']} {str(r['color'])}", 85, y_pos)
+            self.small_brick(75, y_pos - 4, current_row_element["color"])
+            self.brick_text(f"x {current_row_element['count']} {str(current_row_element['color'])}", 85, y_pos)
             y_pos += 8
 
     def big_header(self, header_text, from_top=12):
@@ -123,17 +130,17 @@ class LePyMoPDF(FPDF):
         self.set_font('Arial', '', 14)
         self.text((self.pdf_width - self.get_string_width(header_text)) / 2, from_top, header_text)
 
-    def brick_text(self, text, x, y):
+    def brick_text(self, text, position_x, position_y):
         """Adds a brick text to the page"""
         self.set_font('Arial', '', 14)
-        self.text(x, y, text)
+        self.text(position_x, position_y, text)
 
-    def small_brick(self, x, y, color):
+    def small_brick(self, position_x, position_y, color):
         """Adds a brick to the page"""
         self.set_fill_color(*color)
-        self.set_xy(x, y)
+        self.set_xy(position_x, position_y)
         self.cell(5, 5, fill=True, border=1)
-        self.ellipse(x + 1.0, y + 1.0, 3, 3)
+        self.ellipse(position_x + 1.0, position_y + 1.0, 3, 3)
 
     def abort(self):
         """Stops creating PDF"""

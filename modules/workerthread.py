@@ -1,17 +1,23 @@
-import wx
+"""
+LePyMo Workerthread module
+
+This module contains WorkerThread class.
+Thread is responsible of generating image and pdf.
+"""
+
 import os
 import pathlib
 import datetime
 import threading
+import wx
 from PIL import Image
-from colour.difference import delta_E_CIE2000
 from modules.lepymopdf import LePyMoPDF
-from modules.utilities import ResultEvent, _FILES_SUFFIXES
+from modules.utilities import ResultEvent, _FILES_SUFFIXES, closest_pixel
 
 
 class WorkerThread(threading.Thread):
     """Worker Thread Class."""
-    def __init__(self, notify_window, image_path, palette, nopdf, event_id):
+    def __init__(self, notify_window, image_path, palette, nopdf, event_id):  # pylint: disable=R0913
         """Init Worker Thread Class."""
         threading.Thread.__init__(self)
         self._notify_window = notify_window
@@ -28,6 +34,7 @@ class WorkerThread(threading.Thread):
     def run_thread(self):
         """Run Thread - generate image and pdf"""
 
+        # pylint: disable=R0915
         self.run_date = datetime.datetime.now().strftime("%d%m%Y_%H%M%S")
         temp = {}
 
@@ -53,7 +60,7 @@ class WorkerThread(threading.Thread):
                     if self._abort == 1:
                         return
 
-                    result.append(self.closest_pixel(pixel_color, temp, self.palette))
+                    result.append(closest_pixel(pixel_color, temp, self.palette))
 
                 event_data = {"event_type": "status_change", "status": "Generating image"}
                 wx.PostEvent(self._notify_window, ResultEvent(self.event_id, event_data))
@@ -105,13 +112,6 @@ class WorkerThread(threading.Thread):
             event_data = {"event_type": "result", "status": False}
             wx.PostEvent(self._notify_window, ResultEvent(self.event_id, event_data))
 
-    def closest_pixel(self, pixel, temp, colors):
-        """Helper function, finds closest pixel color based on palette"""
-        if pixel in temp:
-            return temp[pixel]
-        n = min(colors, key=lambda func: delta_E_CIE2000(pixel, func))
-        temp[pixel] = n
-        return temp[pixel]
 
     def abort(self):
         """Helper function, stops current WorkerThread"""
@@ -131,4 +131,3 @@ class WorkerThread(threading.Thread):
 
         event_data = {"event_type": "status_change", "status": "Idle"}
         wx.PostEvent(self._notify_window, ResultEvent(self.event_id, event_data))
-
