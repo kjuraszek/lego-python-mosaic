@@ -8,7 +8,7 @@ import sys
 import csv
 import wx
 import wx.lib.scrolledpanel as scrolled
-from modules.utilities import event_result
+from modules.utilities import event_result, validate_color
 from modules.workerthread import WorkerThread
 
 
@@ -223,7 +223,7 @@ class LePyMoFrame(wx.Frame):
 
     def add_color_to_palette(self, color):
         """Helper function, adds color to the palette"""
-        if self.validate_color(color):
+        if validate_color(color):
             color_rect = wx.StaticText(self.scrolled_panel, label=20 * " ")
             color_rect.SetBackgroundColour(color)
 
@@ -241,17 +241,6 @@ class LePyMoFrame(wx.Frame):
 
         return False
 
-    def validate_color(self, color):
-        """
-        Helper function, returns True if color is a
-        tuple of 3 integers in range <0, 256) (R, G, B)
-        """
-        if (isinstance(color, tuple) and
-            len(color) == 3 and
-            all((isinstance(cc, int) and 0 <= cc < 256) for cc in color)):
-            return True
-
-        return False
 
     def remove_color(self, event):
         """Helper function, removes color from the palette"""

@@ -11,9 +11,8 @@ import datetime
 import threading
 import wx
 from PIL import Image
-from colour.difference import delta_E_CIE2000
 from modules.lepymopdf import LePyMoPDF
-from modules.utilities import ResultEvent, _FILES_SUFFIXES
+from modules.utilities import ResultEvent, _FILES_SUFFIXES, closest_pixel
 
 
 class WorkerThread(threading.Thread):
@@ -60,7 +59,7 @@ class WorkerThread(threading.Thread):
                     if self._abort == 1:
                         return
 
-                    result.append(self.closest_pixel(pixel_color, temp, self.palette))
+                    result.append(closest_pixel(pixel_color, temp, self.palette))
 
                 event_data = {"event_type": "status_change", "status": "Generating image"}
                 wx.PostEvent(self._notify_window, ResultEvent(self.event_id, event_data))
@@ -112,12 +111,6 @@ class WorkerThread(threading.Thread):
             event_data = {"event_type": "result", "status": False}
             wx.PostEvent(self._notify_window, ResultEvent(self.event_id, event_data))
 
-    def closest_pixel(self, pixel, temp, colors):
-        """Helper function, finds closest pixel color based on palette"""
-        if pixel in temp:
-            return temp[pixel]
-        temp[pixel] = min(colors, key=lambda func: delta_E_CIE2000(pixel, func))
-        return temp[pixel]
 
     def abort(self):
         """Helper function, stops current WorkerThread"""
