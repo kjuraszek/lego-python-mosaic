@@ -56,6 +56,10 @@ You can stop current action using Abort button - all files created in current ru
 
 Have fun!
 
+
+## Disclaimer
+ LEGO® is a trademark of the LEGO Group of companies which does not sponsor, authorize or endorse this project.
+
  ## Examples
  ### Build instructions:
  ![LePyMo - Building instructions main page](./img/lepymo-1.jpg "LePyMo - Building instructions main page")
