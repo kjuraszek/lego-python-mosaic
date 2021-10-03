@@ -1,1 +1,2 @@
-pylint
+pylint==2.11.1
+pyinstaller==4.5.1
