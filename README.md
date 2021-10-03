@@ -16,7 +16,21 @@
  This is the easiest one - just download .exe from [here](https://kjuraszek.pl/lego-python-mosaic/).
 
 ### Running script
- `Warning!` This program was tested with python 3.7 (I had some issues to build .exe using 3.8 and 3.9).
+ #### Using Makefile - Linux only
+
+ Clone this repository to your hard drive with:
+ #### `git clone https://github.com/kjuraszek/lego-python-mosaic`
+
+ Set virtual environment and install dependecies:
+ #### `make venv && make reqs`
+
+ Run program:
+ #### `make run`
+
+ Create executable:
+ #### `make reqs-dev && make dist`
+
+ #### Windows
  
  It's a good idea to create and activate a virtual environment first using e.g. `virtualnenv`.
 
