@@ -32,8 +32,7 @@ class LePyMoFrame(wx.Frame):
         event_result(self, self.on_result, self.event_id)
 
         self.scrolled_panel = scrolled.ScrolledPanel(self.panel, -1,
-                                                     style=wx.TAB_TRAVERSAL |
-                                                     wx.SUNKEN_BORDER, name="MainPanel")
+                                                     style=wx.TAB_TRAVERSAL | wx.SUNKEN_BORDER, name="MainPanel")
         self.scrolled_panel.SetAutoLayout(1)
         self.scrolled_panel.SetupScrolling()
 
@@ -87,7 +86,7 @@ class LePyMoFrame(wx.Frame):
                                                    name="selectCSVFileLabel")
         self.csv_file_picker = wx.FilePickerCtrl(self.panel, id=wx.ID_ANY, path="",
                                                  message="Add colors from .CSV file",
-                                                 style=wx.FLP_OPEN|wx.FLP_FILE_MUST_EXIST)
+                                                 style=wx.FLP_OPEN | wx.FLP_FILE_MUST_EXIST)
         self.csv_file_picker.Bind(wx.EVT_FILEPICKER_CHANGED, self.on_colors_load)
         self.input_ids.append(self.csv_file_picker.GetId())
         self.csv_sizer.Add(self.select_csv_file_label)
@@ -157,7 +156,6 @@ class LePyMoFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.on_info, info_item)
         self.Bind(wx.EVT_MENU, self.on_exit, exit_item)
         self.Bind(wx.EVT_CLOSE, self.on_exit)
-
 
         if sys.executable.lower().endswith("lepymo.exe"):
             icon = wx.Icon(sys.executable, wx.BITMAP_TYPE_ICO)
@@ -241,7 +239,6 @@ class LePyMoFrame(wx.Frame):
             return True
 
         return False
-
 
     def remove_color(self, event):
         """Helper function, removes color from the palette"""
