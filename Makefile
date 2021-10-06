@@ -10,6 +10,10 @@ lint:
 	make reqs-dev
 	$(VENV)/bin/pylint lepymo.py modules/
 
+flake8:
+	make reqs-dev
+	$(VENV)/bin/flake8 lepymo.py modules/
+
 reqs:
 	make venv
 	$(PIP) install -r requirements.txt
@@ -31,4 +35,4 @@ clean:
 	rm -rf build
 	rm -rf dist
 	
-.PHONY: venv run lint dev dist clean reqs reqs-dev
+.PHONY: venv run lint flake8 dev dist clean reqs reqs-dev
