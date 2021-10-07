@@ -112,7 +112,6 @@ class WorkerThread(threading.Thread):
             event_data = {"event_type": "result", "status": False}
             wx.PostEvent(self._notify_window, ResultEvent(self.event_id, event_data))
 
-
     def abort(self):
         """Helper function, stops current WorkerThread"""
         if self.pdf and isinstance(self.pdf, LePyMoPDF):

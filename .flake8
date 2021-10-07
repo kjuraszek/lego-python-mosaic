@@ -1,0 +1,4 @@
+[flake8]
+ignore = E722, W503  # TODO: E722
+exclude = __pycache__,build,dist,img
+max-line-length = 140
