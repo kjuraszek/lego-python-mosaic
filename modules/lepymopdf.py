@@ -86,6 +86,7 @@ class LePyMoPDF(FPDF):
             return
 
         self.add_page()
+        self.footer()
         self.big_header("Step " + str(step + 1))
         row_colors = Counter(list(self.image_src.getdata())[step * self.image_width:(step + 1) * self.image_width])
         y_pos = 25
@@ -97,6 +98,7 @@ class LePyMoPDF(FPDF):
                 return
             if y_pos + 8 > 280:
                 self.add_page()
+                self.footer()
                 y_pos = 10
             self.small_brick(75, y_pos - 4, color)
             self.brick_text(f"x {qty} {color}", 85, y_pos)
@@ -110,6 +112,7 @@ class LePyMoPDF(FPDF):
                 return
             if y_pos + 8 > 280:
                 self.add_page()
+                self.footer()
                 y_pos = 10
             self.small_brick(75, y_pos - 4, current_row_element["color"])
             self.brick_text(f"x {current_row_element['count']} {str(current_row_element['color'])}", 85, y_pos)
@@ -129,6 +132,16 @@ class LePyMoPDF(FPDF):
         """Adds a small header to the current page"""
         self.set_font('Arial', '', 14)
         self.text((self.pdf_width - self.get_string_width(header_text)) / 2, from_top, header_text)
+
+    def footer(self):
+        """Adds a small footer to the current page with link to project's Github"""
+        footer_text = "Generated using LePyMo"
+        self.set_font('Arial', '', 10)
+        self.set_text_color(222, 222, 222)
+        self.text((self.pdf_width - self.get_string_width(footer_text))  / 2, 294, footer_text)
+        self.link(x=(self.pdf_width - self.get_string_width(footer_text))  / 2, y=290,
+                  w=self.get_string_width(footer_text), h=5, link='https://github.com/kjuraszek/lego-python-mosaic/')
+        self.set_text_color(0, 0, 0)
 
     def brick_text(self, text, position_x, position_y):
         """Adds a brick text to the page"""
