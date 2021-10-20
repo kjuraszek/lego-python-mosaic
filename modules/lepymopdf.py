@@ -143,6 +143,9 @@ class LePyMoPDF(FPDF):
             self.link(x=(self.pdf_width - self.get_string_width(footer_text))  / 2, y=290,
                     w=self.get_string_width(footer_text), h=5, link='https://github.com/kjuraszek/lego-python-mosaic/')
             self.set_text_color(0, 0, 0)
+            self.set_font('Arial', '', 16)
+            current_page = f'- {self.page_no()} -'
+            self.text((self.pdf_width - self.get_string_width(current_page))  / 2, 290, current_page)
 
     def brick_text(self, text, position_x, position_y):
         """Adds a brick text to the page"""
