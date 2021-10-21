@@ -70,6 +70,13 @@ You can stop current action using Abort button - all files created in current ru
 
 Have fun!
 
+### Brick colors in real life
+
+Here are some links which might be useful to determine your color palette (based on bricks used in real sets):
+- [Ryan Howerter's website](http://ryanhowerter.net/colors.php)
+- [brickset.com](https://brickset.com/colours)
+- [rebrickable.com](https://rebrickable.com/colors/)
+- [brickipedia.com](https://brickipedia.fandom.com/wiki/Colour_Palette)
 
 ## Disclaimer
  LEGO® is a trademark of the LEGO Group of companies which does not sponsor, authorize or endorse this project.
