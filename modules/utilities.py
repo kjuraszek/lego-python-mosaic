@@ -4,6 +4,7 @@ utilities module
 This module contains common constants, functions and classes.
 """
 
+import re
 import wx
 from colour.difference import delta_E_CIE2000
 
@@ -25,6 +26,27 @@ def validate_color(color):
         return True
 
     return False
+
+
+def validate_hex_color(color):
+    """
+    Helper function, returns True if color is a
+    valid HEX color
+    """
+    pattern = r"^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$"
+    result = re.match(pattern, color)
+    return bool(result)
+
+
+def convert_hex_to_rgb(color):
+    """
+    Helper function, returns True if color is a
+    tuple of 3 integers in range <0, 256) (R, G, B)
+    """
+    if len(color) == 3:
+        color = ''.join(c * 2 for c in color)
+    color = [color[i] + color[i + 1] for i in range(0, len(color), 2)]
+    return tuple(int(i, 16) for i in color)
 
 
 def closest_pixel(pixel, temp, colors):

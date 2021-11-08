@@ -8,7 +8,7 @@ import sys
 import csv
 import wx
 import wx.lib.scrolledpanel as scrolled
-from modules.utilities import event_result, validate_color
+from modules.utilities import event_result, validate_color, validate_hex_color, convert_hex_to_rgb
 from modules.workerthread import WorkerThread
 
 
@@ -204,9 +204,14 @@ class LePyMoFrame(wx.Frame):
 
         for row in rows:
             if len(row) == 3:
-                color_tuple = tuple(int(z) for z in row if z.isdigit())
-                if len(color_tuple) == 3 and color_tuple not in self.palette.values():
-                    colors.append(color_tuple)
+                if row[0].startswith('#') and validate_hex_color(row[0]):
+                    color_tuple = convert_hex_to_rgb(row[0].lstrip('#'))
+                elif not row[0].startswith('#'):
+                    color_tuple = tuple(int(z) for z in row if z.isdigit())
+            else:
+                continue
+            if len(color_tuple) == 3 and color_tuple not in self.palette.values():
+                colors.append(color_tuple)
 
         colors = list(set(colors))
         added_colors = 0

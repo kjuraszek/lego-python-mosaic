@@ -54,12 +54,11 @@ First you have to prepare your desired image - its dimensions (in pixels) must b
 the size (in bricks) of mosaic you are planning to create. E.g. when your plate is 50 by 50 
 bricks, your image dimensions must be 50px by 50px. 
 
-The next step is to add colors to your palette. Keep in mind that some colors aren't used in brick production - you are limited to less 
-than 300 colors. At this stage it is better to keep Don't generate PDF option turned on to test 
+The next step is to add colors to your palette. Keep in mind that some colors aren't used in brick production - you are limited to less than 300 colors. At this stage it is better to keep Don't generate PDF option turned on to test 
 selected color palette. The process of creating desired image can take even up to a few minutes - 
 it depends on amount of colors in your palette and dimensions of image. 
 
-You also can add colors to the palette using .csv file - look at `example-colors.csv` file. Each row represents one color, and each column - red (R), green (G) or blue (B) part of color (in that order). Each column must be separated with semicolon `;` and each row with a newline.
+You also can add colors to the palette using .csv file - look at `example-colors.csv` file. Each row represents one color, and each column - red (R), green (G) or blue (B) part of color (in that order). You can use HEX instead of RGB format of the colors - insert a full color respresentation (with `#` symbol) in the first column. Each column must be separated with semicolon `;` and each row with a newline.
 
 When you are satisfied with output image you can turn off Don't generate PDF option. This process also can take up to a
 few minutes - it depends on amount of colors in your palette and dimensions of image. The PDF 
