@@ -10,6 +10,34 @@ from colour.difference import delta_E_CIE2000
 
 _FILES_SUFFIXES = ["_mosaic.png", "_mosaic_scaled.png", "_mosaic_instructions.pdf"]
 
+_PDF_FORMATS = {
+    "A4" : {
+        "pdf_width" : 210,
+        "pdf_height" : 297,
+        "big_header_font_size" : 38,
+        "medium_header_font_size" : 24,
+        "small_header_font_size" : 14,
+        "footer_font_size" : 10,
+        "footer_text_y_pos" : 294,
+        "footer_link_y" : 290,
+        "footer_link_height" : 5,
+        "paging_y_pos" : 290,
+        "paging_font_size" : 16,
+        "page_y_pos" : 20,
+        "page_max_y_pos" : 280,
+        "main_page_image_size" : 60,
+        "small_header_margin" : 5,
+        "medium_header_margin" : 10,
+        "small_brick_font_size" : 14,
+        "small_brick_x_pos" : 75,
+        "small_brick_text_x_pos" : 85,
+        "small_brick_margin" : 8,
+        "small_brick_size" : 5,
+        "small_brick_ellipsis_pos" : 1.0,
+        "small_brick_ellipsis_size" : 3.0
+    }
+}
+
 
 def event_result(window, function, event_id):
     """Define Result Event."""
