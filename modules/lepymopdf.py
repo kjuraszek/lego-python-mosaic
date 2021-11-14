@@ -35,8 +35,10 @@ class LePyMoPDF(FPDF):
         self.small_header("Lego Python Mosaic", y_pos)
 
         y_pos += _PDF_FORMATS["A4"]["small_header_margin"]
-        self.set_xy((self.pdf_width  - _PDF_FORMATS["A4"]["main_page_image_size"]) // 2, y_pos)
-        self.image(self.image_scaled, link='', type='', w = _PDF_FORMATS["A4"]["main_page_image_size"], h = _PDF_FORMATS["A4"]["main_page_image_size"])
+        self.set_xy((self.pdf_width - _PDF_FORMATS["A4"]["main_page_image_size"]) // 2, y_pos)
+        self.image(self.image_scaled, link='', type='',
+                   w=_PDF_FORMATS["A4"]["main_page_image_size"],
+                   h=_PDF_FORMATS["A4"]["main_page_image_size"])
 
         y_pos += _PDF_FORMATS["A4"]["medium_header_margin"] + _PDF_FORMATS["A4"]["main_page_image_size"]
         self.medium_header("Build instructions for your image", y_pos)
@@ -128,21 +130,24 @@ class LePyMoPDF(FPDF):
                 self.add_page()
                 self.footer()
                 y_pos = _PDF_FORMATS["A4"]["medium_header_margin"]
-            self.small_brick(_PDF_FORMATS["A4"]["small_brick_x_pos"], y_pos - _PDF_FORMATS["A4"]["small_brick_margin"] / 2, current_row_element["color"])
-            self.brick_text(f"x {current_row_element['count']} {str(current_row_element['color'])}", _PDF_FORMATS["A4"]["small_brick_text_x_pos"], y_pos)
+            self.small_brick(_PDF_FORMATS["A4"]["small_brick_x_pos"],
+                             y_pos - _PDF_FORMATS["A4"]["small_brick_margin"] / 2,
+                             current_row_element["color"])
+            self.brick_text(f"x {current_row_element['count']} {str(current_row_element['color'])}",
+                            _PDF_FORMATS["A4"]["small_brick_text_x_pos"], y_pos)
             y_pos += _PDF_FORMATS["A4"]["small_brick_margin"]
 
-    def big_header(self, header_text, from_top = 12):
+    def big_header(self, header_text, from_top=12):
         """Adds a big header to the current page"""
         self.set_font('Arial', '', _PDF_FORMATS["A4"]["big_header_font_size"])
         self.text((self.pdf_width - self.get_string_width(header_text)) / 2, from_top, header_text)
 
-    def medium_header(self, header_text, from_top = 12):
+    def medium_header(self, header_text, from_top=12):
         """Adds a medium header to the current page"""
         self.set_font('Arial', '', _PDF_FORMATS["A4"]["medium_header_font_size"])
         self.text((self.pdf_width - self.get_string_width(header_text)) / 2, from_top, header_text)
 
-    def small_header(self, header_text, from_top = 12):
+    def small_header(self, header_text, from_top=12):
         """Adds a small header to the current page"""
         self.set_font('Arial', '', _PDF_FORMATS["A4"]["small_header_font_size"])
         self.text((self.pdf_width - self.get_string_width(header_text)) / 2, from_top, header_text)
@@ -154,8 +159,8 @@ class LePyMoPDF(FPDF):
             self.set_font('Arial', '', _PDF_FORMATS["A4"]["footer_font_size"])
             self.set_text_color(222, 222, 222)
             self.text((self.pdf_width - self.get_string_width(footer_text)) / 2, _PDF_FORMATS["A4"]["footer_text_y_pos"], footer_text)
-            self.link(x=(self.pdf_width - self.get_string_width(footer_text)) / 2, y = _PDF_FORMATS["A4"]["footer_link_y"],
-                      w=self.get_string_width(footer_text), h = _PDF_FORMATS["A4"]["footer_link_height"],
+            self.link(x=(self.pdf_width - self.get_string_width(footer_text)) / 2, y=_PDF_FORMATS["A4"]["footer_link_y"],
+                      w=self.get_string_width(footer_text), h=_PDF_FORMATS["A4"]["footer_link_height"],
                       link='https://github.com/kjuraszek/lego-python-mosaic/')
             self.set_text_color(0, 0, 0)
             self.set_font('Arial', '', _PDF_FORMATS["A4"]["paging_font_size"])
@@ -171,8 +176,11 @@ class LePyMoPDF(FPDF):
         """Adds a brick to the page"""
         self.set_fill_color(*color)
         self.set_xy(position_x, position_y)
-        self.cell(_PDF_FORMATS["A4"]["small_brick_size"], _PDF_FORMATS["A4"]["small_brick_size"], fill = True, border = 1)
-        self.ellipse(position_x + _PDF_FORMATS["A4"]["small_brick_ellipsis_pos"], position_y + _PDF_FORMATS["A4"]["small_brick_ellipsis_pos"], _PDF_FORMATS["A4"]["small_brick_ellipsis_size"], _PDF_FORMATS["A4"]["small_brick_ellipsis_size"])
+        self.cell(_PDF_FORMATS["A4"]["small_brick_size"], _PDF_FORMATS["A4"]["small_brick_size"], fill=True, border=1)
+        self.ellipse(position_x + _PDF_FORMATS["A4"]["small_brick_ellipsis_pos"],
+                     position_y + _PDF_FORMATS["A4"]["small_brick_ellipsis_pos"],
+                     _PDF_FORMATS["A4"]["small_brick_ellipsis_size"],
+                     _PDF_FORMATS["A4"]["small_brick_ellipsis_size"])
 
     def abort(self):
         """Stops creating PDF"""
