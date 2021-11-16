@@ -63,7 +63,8 @@ class LePyMoPDF(FPDF):
             if y_pos + _PDF_FORMATS[self.pdf_format]["small_brick_margin"] > _PDF_FORMATS[self.pdf_format]["page_max_y_pos"]:
                 self.add_page()
                 y_pos = _PDF_FORMATS[self.pdf_format]["medium_header_margin"]
-            self.small_brick(_PDF_FORMATS[self.pdf_format]["small_brick_x_pos"], y_pos - _PDF_FORMATS[self.pdf_format]["small_brick_margin"] / 2, color)
+            self.small_brick(_PDF_FORMATS[self.pdf_format]["small_brick_x_pos"],
+                             y_pos - _PDF_FORMATS[self.pdf_format]["small_brick_margin"] / 2, color)
             self.brick_text(f"x {qty} {color}", _PDF_FORMATS[self.pdf_format]["small_brick_text_x_pos"], y_pos)
             y_pos += _PDF_FORMATS[self.pdf_format]["small_brick_margin"]
 
@@ -118,7 +119,8 @@ class LePyMoPDF(FPDF):
                 self.add_page()
                 self.footer()
                 y_pos = _PDF_FORMATS[self.pdf_format]["medium_header_margin"]
-            self.small_brick(_PDF_FORMATS[self.pdf_format]["small_brick_x_pos"], y_pos - _PDF_FORMATS[self.pdf_format]["small_brick_margin"] / 2, color)
+            self.small_brick(_PDF_FORMATS[self.pdf_format]["small_brick_x_pos"],
+                             y_pos - _PDF_FORMATS[self.pdf_format]["small_brick_margin"] / 2, color)
             self.brick_text(f"x {qty} {color}", _PDF_FORMATS[self.pdf_format]["small_brick_text_x_pos"], y_pos)
             y_pos += _PDF_FORMATS[self.pdf_format]["small_brick_margin"]
 
@@ -161,14 +163,16 @@ class LePyMoPDF(FPDF):
             footer_text = "Generated using LePyMo"
             self.set_font('Arial', '', _PDF_FORMATS[self.pdf_format]["footer_font_size"])
             self.set_text_color(222, 222, 222)
-            self.text((self.pdf_width - self.get_string_width(footer_text)) / 2, _PDF_FORMATS[self.pdf_format]["footer_text_y_pos"], footer_text)
+            self.text((self.pdf_width - self.get_string_width(footer_text)) / 2,
+                      _PDF_FORMATS[self.pdf_format]["footer_text_y_pos"], footer_text)
             self.link(x=(self.pdf_width - self.get_string_width(footer_text)) / 2, y=_PDF_FORMATS[self.pdf_format]["footer_link_y"],
                       w=self.get_string_width(footer_text), h=_PDF_FORMATS[self.pdf_format]["footer_link_height"],
                       link='https://github.com/kjuraszek/lego-python-mosaic/')
             self.set_text_color(0, 0, 0)
             self.set_font('Arial', '', _PDF_FORMATS[self.pdf_format]["paging_font_size"])
             current_page = f'- {self.page_no()} -'
-            self.text((self.pdf_width - self.get_string_width(current_page)) / 2, _PDF_FORMATS[self.pdf_format]["paging_y_pos"], current_page)
+            self.text((self.pdf_width - self.get_string_width(current_page)) / 2,
+                      _PDF_FORMATS[self.pdf_format]["paging_y_pos"], current_page)
 
     def brick_text(self, text, position_x, position_y):
         """Adds a brick text to the page"""
