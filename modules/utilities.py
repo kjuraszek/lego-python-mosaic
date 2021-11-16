@@ -28,6 +28,7 @@ _PDF_FORMATS = {
         "main_page_image_size": 60,
         "small_header_margin": 5,
         "medium_header_margin": 10,
+        "deafult_header_margin_top": 12,
         "small_brick_font_size": 14,
         "small_brick_x_pos": 75,
         "small_brick_text_x_pos": 85,
@@ -35,7 +36,33 @@ _PDF_FORMATS = {
         "small_brick_size": 5,
         "small_brick_ellipsis_pos": 1.0,
         "small_brick_ellipsis_size": 3.0
-    }
+    },
+    "A5": {
+        "pdf_width": 148,
+        "pdf_height": 210,
+        "big_header_font_size": 26,
+        "medium_header_font_size": 16,
+        "small_header_font_size": 10,
+        "footer_font_size": 7,
+        "footer_text_y_pos": 206,
+        "footer_link_y": 203,
+        "footer_link_height": 4,
+        "paging_y_pos": 203,
+        "paging_font_size": 11,
+        "page_y_pos": 14,
+        "page_max_y_pos": 196,
+        "main_page_image_size": 42,
+        "small_header_margin": 4,
+        "medium_header_margin": 7,
+        "deafult_header_margin_top": 8,
+        "small_brick_font_size": 10,
+        "small_brick_x_pos": 52,
+        "small_brick_text_x_pos": 60,
+        "small_brick_margin": 6,
+        "small_brick_size": 4,
+        "small_brick_ellipsis_pos": 0.75,
+        "small_brick_ellipsis_size": 2.5
+    },
 }
 
 
