@@ -15,7 +15,7 @@ from modules.utilities import _PDF_FORMATS
 class LePyMoPDF(FPDF):
     """LePyMoPDF class"""
 
-    def __init__(self, image_src, image_scaled, start_date, pdf_format="A4"):
+    def __init__(self, image_src, image_scaled, start_date, pdf_format):
         """Init LePyMoPDF class"""
         if pdf_format not in _PDF_FORMATS.keys():
             pdf_format = "A4"
