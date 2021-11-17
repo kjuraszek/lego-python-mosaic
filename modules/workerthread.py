@@ -17,7 +17,7 @@ from modules.utilities import ResultEvent, _FILES_SUFFIXES, closest_pixel
 
 class WorkerThread(threading.Thread):
     """Worker Thread Class."""
-    def __init__(self, notify_window, image_path, palette, nopdf, event_id):  # pylint: disable=R0913
+    def __init__(self, notify_window, image_path, palette, nopdf, event_id, pdf_format):  # pylint: disable=R0913
         """Init Worker Thread Class."""
         threading.Thread.__init__(self)
         self._notify_window = notify_window
@@ -27,6 +27,7 @@ class WorkerThread(threading.Thread):
         self.palette = palette
         self.pdf = False
         self.nopdf = nopdf
+        self.pdf_format = pdf_format
         self.event_id = event_id
         self.run_date = False
         self.start()
@@ -76,7 +77,7 @@ class WorkerThread(threading.Thread):
 
                 if not self.nopdf and self._abort == 0:
 
-                    self.pdf = LePyMoPDF(mosaic_name, mosaic_name_scaled, self.run_date)
+                    self.pdf = LePyMoPDF(mosaic_name, mosaic_name_scaled, self.run_date, self.pdf_format)
                     self.pdf.main_page()
                     for i in range(image_height):
                         event_data = {"event_type": "status_change", "status": f"Creating PDF page {i+1} / {image_height}"}
