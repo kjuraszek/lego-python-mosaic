@@ -8,7 +8,7 @@ import sys
 import csv
 import wx
 import wx.lib.scrolledpanel as scrolled
-from modules.utilities import event_result, validate_color, validate_hex_color, convert_hex_to_rgb
+from modules.utilities import event_result, validate_color, validate_hex_color, convert_hex_to_rgb, _PDF_FORMATS
 from modules.workerthread import WorkerThread
 
 
@@ -18,7 +18,7 @@ class LePyMoFrame(wx.Frame):
     # pylint: disable=R0902,R0915
     def __init__(self):
         """Init LePyMo Class."""
-        wx.Frame.__init__(self, None, wx.ID_ANY, "LePyMo", size=(240, 500))
+        wx.Frame.__init__(self, None, wx.ID_ANY, "LePyMo", size=(240, 560))
 
         self.panel = wx.Panel(self, wx.ID_ANY)
         self.selected_file = ""
@@ -101,12 +101,18 @@ class LePyMoFrame(wx.Frame):
                                             label="(Use this option to test\n "
                                             "your color palette.)", name="colorPalette")
 
+        pdf_formats = sorted(_PDF_FORMATS.keys())
+        self.pdf_format_radio_box = wx.RadioBox(self.panel, id=wx.ID_ANY, label="PDF Format",
+                                                choices=pdf_formats, name="pdfFormatRadioBox")
+
         generate_btn = wx.Button(self.panel, wx.ID_ANY, label="Generate PDF and image")
         generate_btn.Bind(wx.EVT_BUTTON, self.on_generate)
         self.input_ids.append(generate_btn.GetId())
 
         self.generate_sizer.Add(self.nopdf_checkbox)
         self.generate_sizer.Add(nopdf_checkbox_info)
+        self.generate_sizer.AddSpacer(10)
+        self.generate_sizer.Add(self.pdf_format_radio_box)
         self.generate_sizer.AddSpacer(10)
         self.generate_sizer.Add(generate_btn)
 
@@ -271,9 +277,11 @@ class LePyMoFrame(wx.Frame):
         else:
             self.set_status("Starting")
             self.disable_inputs()
+            pdf_formats = sorted(_PDF_FORMATS.keys())
+            pdf_format = pdf_formats[self.pdf_format_radio_box.GetSelection()]
             self.worker = WorkerThread(self, self.selected_file,
                                        list(self.palette.values()),
-                                       self.nopdf, self.event_id)
+                                       self.nopdf, self.event_id, pdf_format)
 
     def disable_inputs(self):
         """Helper function, disables inputs"""
