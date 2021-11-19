@@ -104,7 +104,6 @@ class LePyMoPDF(FPDF):
             return
 
         self.add_page()
-        self.footer()
         self.big_header("Step " + str(step + 1), _PDF_FORMATS[self.pdf_format]["deafult_header_margin_top"])
         row_colors = Counter(list(self.image_src.getdata())[step * self.image_width:(step + 1) * self.image_width])
 
@@ -117,7 +116,6 @@ class LePyMoPDF(FPDF):
                 return
             if y_pos + _PDF_FORMATS[self.pdf_format]["small_brick_margin"] > _PDF_FORMATS[self.pdf_format]["page_max_y_pos"]:
                 self.add_page()
-                self.footer()
                 y_pos = _PDF_FORMATS[self.pdf_format]["medium_header_margin"]
             self.small_brick(_PDF_FORMATS[self.pdf_format]["small_brick_x_pos"],
                              y_pos - _PDF_FORMATS[self.pdf_format]["small_brick_margin"] / 2, color)
@@ -133,7 +131,6 @@ class LePyMoPDF(FPDF):
                 return
             if y_pos + _PDF_FORMATS[self.pdf_format]["small_brick_margin"] > _PDF_FORMATS[self.pdf_format]["page_max_y_pos"]:
                 self.add_page()
-                self.footer()
                 y_pos = _PDF_FORMATS[self.pdf_format]["medium_header_margin"]
             self.small_brick(_PDF_FORMATS[self.pdf_format]["small_brick_x_pos"],
                              y_pos - _PDF_FORMATS[self.pdf_format]["small_brick_margin"] / 2,
