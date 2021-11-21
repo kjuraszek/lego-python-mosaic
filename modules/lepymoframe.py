@@ -5,6 +5,7 @@ This is application's main frame.
 """
 
 import sys
+import datetime
 import csv
 import wx
 import wx.lib.scrolledpanel as scrolled
@@ -18,7 +19,7 @@ class LePyMoFrame(wx.Frame):
     # pylint: disable=R0902,R0915
     def __init__(self):
         """Init LePyMo Class."""
-        wx.Frame.__init__(self, None, wx.ID_ANY, "LePyMo", size=(240, 560))
+        wx.Frame.__init__(self, None, wx.ID_ANY, "LePyMo", size=(240, 600))
 
         self.panel = wx.Panel(self, wx.ID_ANY)
         self.selected_file = ""
@@ -91,6 +92,16 @@ class LePyMoFrame(wx.Frame):
         self.input_ids.append(self.csv_file_picker.GetId())
         self.csv_sizer.Add(self.select_csv_file_label)
         self.csv_sizer.Add(self.csv_file_picker)
+        self.csv_sizer.AddSpacer(10)
+
+        self.export_csv_file_label = wx.StaticText(self.panel, wx.ID_ANY,
+                                                   label="Export palette to .CSV file:",
+                                                   name="exportCSVFileLabel")
+        self.export_csv_file_button = wx.Button(self.panel, wx.ID_ANY, label="Export palette")
+        self.export_csv_file_button.Bind(wx.EVT_BUTTON, self.on_palette_export)
+        self.input_ids.append(self.export_csv_file_button.GetId())
+        self.csv_sizer.Add(self.export_csv_file_label)
+        self.csv_sizer.Add(self.export_csv_file_button)
 
         self.nopdf_checkbox = wx.CheckBox(self.panel, wx.ID_ANY, label="Don't generate PDF")
         self.nopdf_checkbox.SetValue(True)
@@ -230,6 +241,24 @@ class LePyMoFrame(wx.Frame):
         wx.MessageBox(message=f"{added_colors} color{'s' if added_colors != 1 else ''} "
                               f"have been added to the palette ",
                       caption="Added colors", style=wx.OK)
+
+    def on_palette_export(self, _):
+        if len(self.palette) == 0:
+            wx.MessageBox(message="Color palette is empty.",
+                          caption="Exporting color palette failed",
+                          style=wx.OK | wx.ICON_ERROR)
+        else:
+            try:
+                current_date = datetime.datetime.now().strftime("%d%m%Y_%H%M%S")
+                exported_file = f"{current_date}_lepymo_palette.csv"
+                with open(exported_file, "w", newline="", encoding="utf-8") as csv_file:
+                    csv_writer = csv.writer(csv_file, delimiter=";", quotechar="|")
+                    for color_tuple in self.palette.values():
+                        csv_writer.writerow(color_tuple)
+            except:
+                wx.MessageBox(message="Exporting color palette failed.",
+                          caption="Exporting color palette failed",
+                          style=wx.OK | wx.ICON_ERROR)
 
     def add_color_to_palette(self, color):
         """Helper function, adds color to the palette"""
