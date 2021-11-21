@@ -243,6 +243,7 @@ class LePyMoFrame(wx.Frame):
                       caption="Added colors", style=wx.OK)
 
     def on_palette_export(self, _):
+        """Helper function, exports color palette to a CSV file"""
         if len(self.palette) == 0:
             wx.MessageBox(message="Color palette is empty.",
                           caption="Exporting color palette failed",
@@ -257,8 +258,8 @@ class LePyMoFrame(wx.Frame):
                         csv_writer.writerow(color_tuple)
             except:
                 wx.MessageBox(message="Exporting color palette failed.",
-                          caption="Exporting color palette failed",
-                          style=wx.OK | wx.ICON_ERROR)
+                              caption="Exporting color palette failed",
+                              style=wx.OK | wx.ICON_ERROR)
 
     def add_color_to_palette(self, color):
         """Helper function, adds color to the palette"""
